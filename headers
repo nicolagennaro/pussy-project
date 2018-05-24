@@ -1,0 +1,34 @@
+ratings
+UserID::MovieID::Rating::Timestamp
+
+int, int, int[1,5], int
+
+
+
+
+users
+UserID::Gender::Age::Occupation::Zip-code
+
+int, [M,F], int, int, int
+
+
+
+
+movies
+MovieID::Title::Genres
+int, string (release year), strings separated by "|"
+
+
+
+occupations
+occID:occupation
+
+int, string
+
+
+
+
+ages
+ageID:ages
+
+int, string
