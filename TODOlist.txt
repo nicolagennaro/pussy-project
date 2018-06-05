@@ -3,19 +3,25 @@ clean the notebooks
 save pics
 presentation latex?
 
+
 more plots and statistics
-     male female rating
-     movie gender rating
-     CA NY MI TX ratings
+     male female rating            N
+     plot rating vs movie genre    L 
+     CA NY MI TX ratings           N
+     plot movie genre vs year or decennio  ? A
 
-measures for recommender sys
 
-create database for RNN
-transer code to pyhton-script
+measures for recommender sys (tutti) anche codice
+
+
+create database for input RNN ( movies with more ratings & most recent 1960 )  A
+split in train-test on users
+transer code to pyhton-script                  N
 test script on CINECA
-function to extract best unseen prediction
+function to extract best unseen prediction     L
+
 
 think about NN or others for recommendation
 create database for NN
 
-
+clustering
