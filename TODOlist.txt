@@ -1,14 +1,20 @@
 
 clean the notebooks
+save pics
+presentation latex?
+
 more plots and statistics
      male female rating
      movie gender rating
-     CA NY TX ratings
+     CA NY MI TX ratings
 
+measures for recommender sys
+
+create database for RNN
 transer code to pyhton-script
 test script on CINECA
-create database for RNN
 function to extract best unseen prediction
+
 think about NN or others for recommendation
 create database for NN
 
