@@ -18,13 +18,13 @@ import sys
 # some variables
 
 ratings_file = "rating.csv"
-ratings_file = "../ratings.csv"
+ratings_file = "../user_movies_1hot.csv"
 
 
 train_test_size = 0.1
 train_random_state = 3
 hidden_neurons = 300
-n_epochs = 1
+n_epochs = 100
 
 csv_log = True
 save_model = True
@@ -62,6 +62,7 @@ log_file = open("log_file", "w")
 
 
 ratings = pd.read_csv(ratings_file)
+ratings = ratings.drop(["time"], axis=1)
 n_movies = ratings.shape[1]-1
 
 
@@ -77,6 +78,7 @@ log_file.write( "n_movies: {}\n".format(n_movies) )
 #
 
 users = ratings['userID'].unique()
+print(users)
 n_users = users.shape[0]
 log_file.write( "n_users: {}\n\n".format(n_users) )
 
@@ -134,6 +136,9 @@ def train_generator(users_pool, out=1):
             X_train_d = d.iloc[ : (d.shape[0] - out ), 1 : ]
             y_train_d = d.iloc[ d.shape[0] - out : , 1 : ]
 
+            X_train_d = d.iloc[ : (d.shape[0] - out ), 1 : ]
+            y_train_d = d.iloc[ d.shape[0] - out : , 1 : ]
+
             X_train = X_train_d.values.reshape(1, d.shape[0] - out, n_movies )
             y_train = np.zeros(n_movies)
             for _ in range(out):
@@ -178,10 +183,11 @@ model.summary(print_fn = lambda x: log_file.write(x + '\n') )
 
 
 steps_per_epoch = users.shape[0]
-# print("step per epoch: {}".format(steps_per_epoch))
+print("step per epoch: {}".format(steps_per_epoch))
 
-validation_steps = int(n_users/10)
-# print("validation steps: {}".format(validation_steps))
+#validation_steps = int(n_users/10)
+validation_steps = 3
+print("validation steps: {}".format(validation_steps))
 
 log_file.write( "\nsteps_per_epoch {}\n".format(steps_per_epoch) )
 log_file.write( "validation steps {}\n\n".format(validation_steps) )
