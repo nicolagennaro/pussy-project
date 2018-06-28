@@ -24,4 +24,20 @@ function to extract best unseen prediction     L
 think about NN or others for recommendation
 create database for NN
 
-clustering
+????? clustering ?????
+
+
+
+
+modify test_train for writing vector of users and change out parameter    N
+function to measure the accuracy of prediction for different out param    A
+function to measure the accuracy using also ratings and other variables   L
+one hot encoding of movies in python script                               ? call the file one_hot.py 
+surprise library for MF                                                   L
+suggest top movies (highest mean rate) not seen by the user               N
+suggest top movies (most ratings) not seen by the user                    A
+
+
+
+trip advisor method of ranking (find the function...)
+

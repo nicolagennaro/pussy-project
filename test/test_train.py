@@ -17,6 +17,13 @@ import sys
 
 # some variables
 
+
+a = np.arange(1000)
+
+np.save("ciao", a)
+
+
+
 ratings_file = "rating.csv"
 ratings_file = "../user_movies_1hot.csv"
 
@@ -79,6 +86,7 @@ log_file.write( "n_movies: {}\n".format(n_movies) )
 
 users = ratings['userID'].unique()
 print(users)
+print(type(users))
 n_users = users.shape[0]
 log_file.write( "n_users: {}\n\n".format(n_users) )
 
@@ -87,6 +95,8 @@ log_file.write( "n_users: {}\n\n".format(n_users) )
 # select users (np vectors) for train and test
 #
                 
+                
+# set a seed
 indices = np.random.permutation(users.shape[0])
 split = int(users.shape[0]*(1-train_test_size))
 
@@ -99,9 +109,28 @@ users_train , users_test = users[ train_ind ], users[ test_ind ]
 log_file.write( "users_train.shape {}\n".format(users_train.shape) )
 log_file.write( "users_test.shape {}\n".format(users_test.shape) )
 
-                
-np.save("users_train", users_train)
+
+u = users_train.copy()
+
+df = pd.DataFrame(u)
+print("DDDDDDDDDDDD")
+print(df.shape)
+df.to_csv(path_or_buf="users_train.csv", sep=",", header=False)
+
+log_file.write(",".join(users_train.astype(str)))
+
+print(train_ind)
+np.save("caio", train_ind)
+print("users")
+print(users_train[:10])
+print(users_train.shape)
+print(users_train.reshape(users_train.shape[0], 1).shape)
+
+# np.save("users_train", users_train)
+np.save("users_train", users_train.reshape(users_train.shape[0], 1))
 np.save("users_test", users_test)
+np.savetxt("users_test.txt", users_test)
+print(type(users_test))
 
 log_file.write( "\nvectors saved\n\n" )
 
