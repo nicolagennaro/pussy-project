@@ -1,0 +1,42 @@
+seed: 17
+train_test_size: 0.1
+train_random_state: 3
+hidden_neurons: 300
+n_epochs: 5
+left_out: 1
+ratings.shape: (1000, 665)
+n_movies: 664
+n_users: 7
+
+train_test_size 0.1
+split at 6
+users_train.shape (6,)
+users_test.shape (1,)
+
+users vectors saved
+
+in_out_neurons 664
+hidden_neurons 300
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+lstm_1 (LSTM)                (None, 300)               1158000   
+_________________________________________________________________
+dense_1 (Dense)              (None, 664)               199864    
+_________________________________________________________________
+activation_1 (Activation)    (None, 664)               0         
+=================================================================
+Total params: 1,357,864
+Trainable params: 1,357,864
+Non-trainable params: 0
+_________________________________________________________________
+
+steps_per_epoch 6
+validation steps 1
+
+start training at 2018-06-29 10:54:50.896569
+
+final time 2018-06-29 10:55:03.415875
+
+total training time 0:00:12.519306
+

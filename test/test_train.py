@@ -18,20 +18,15 @@ import sys
 # some variables
 
 
-a = np.arange(1000)
-
-np.save("ciao", a)
-
-
-
-ratings_file = "rating.csv"
+# ratings_file = "rating.csv"
 ratings_file = "../user_movies_1hot.csv"
 
 
+seed = 17
 train_test_size = 0.1
 train_random_state = 3
 hidden_neurons = 300
-n_epochs = 100
+n_epochs = 1
 
 csv_log = True
 save_model = True
@@ -39,6 +34,8 @@ save_model = True
 model_file = "model_file"
 train_file = "training_file"
 validation_file = "validation_file"
+
+
 
 
 # create the folder 
@@ -87,16 +84,24 @@ log_file.write( "n_movies: {}\n".format(n_movies) )
 users = ratings['userID'].unique()
 print(users)
 print(type(users))
+print(users.shape)
 n_users = users.shape[0]
 log_file.write( "n_users: {}\n\n".format(n_users) )
+
+
+
 
                 
 #
 # select users (np vectors) for train and test
 #
-                
+
+
+
+        
                 
 # set a seed
+np.random.seed(seed)
 indices = np.random.permutation(users.shape[0])
 split = int(users.shape[0]*(1-train_test_size))
 
@@ -106,33 +111,37 @@ log_file.write( "split at {}\n".format(split) )
 train_ind, test_ind = indices[:split], indices[split:]
 users_train , users_test = users[ train_ind ], users[ test_ind ]
 
+
 log_file.write( "users_train.shape {}\n".format(users_train.shape) )
 log_file.write( "users_test.shape {}\n".format(users_test.shape) )
 
-
-u = users_train.copy()
-
-df = pd.DataFrame(u)
-print("DDDDDDDDDDDD")
-print(df.shape)
-df.to_csv(path_or_buf="users_train.csv", sep=",", header=False)
+a = np.arange(10)
+print(a.shape)
+np.save("ciao", a)
 
 log_file.write(",".join(users_train.astype(str)))
 
-print(train_ind)
-np.save("caio", train_ind)
-print("users")
-print(users_train[:10])
-print(users_train.shape)
-print(users_train.reshape(users_train.shape[0], 1).shape)
+#users_train_file = open("users_train.dat", "w")
+#users_test_file = open("users_test.dat", "w")
 
-# np.save("users_train", users_train)
-np.save("users_train", users_train.reshape(users_train.shape[0], 1))
+print(users_train.shape)
+# print(users_train.reshape(users_train.shape[0], 1).shape)
+
+#users_train_file.write(",".join(users_train.reshape(users_train.shape[0], 1).astype(str)))
+#users_test_file.write(",".join(users_test.astype(str)))
+
+np.save("users_train", users_train)
+np.save("users_train1", users_train.reshape(users_train.shape[0], 1))
 np.save("users_test", users_test)
-np.savetxt("users_test.txt", users_test)
-print(type(users_test))
+# np.savetxt("users_test.txt", users_test)
+
 
 log_file.write( "\nvectors saved\n\n" )
+
+#users_train_file.close()
+#users_test_file.close()
+
+
 
 # train generator, extract user from train, put data in np array
 
@@ -255,3 +264,4 @@ if save_model:
 
 
 log_file.write( "model saved\n\nfinished\n" )
+log_file.close()
