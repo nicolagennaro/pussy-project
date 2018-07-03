@@ -187,12 +187,10 @@ def train_generator(users_pool, out=1):
 
 
 
-# x = next(train_generator(users_train))
+x, y = next(train_generator(users_train))
 
-# print(x)
-# print(type(x[0]))
-# print(x[0].shape)
-# print(x[1].shape)
+print(x.shape)
+print(y.shape)
 
 
 #
