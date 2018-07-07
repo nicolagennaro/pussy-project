@@ -77,8 +77,8 @@ log.write( "users_train.shape {}\n".format(users_train.shape) )
 log.write( "users_test.shape {}\n".format(users_test.shape) )
 
 
-np.save( "users_train_{}".format(train_test_size).replace(".",""), users_train)
-np.save("users_test_{}".format(train_test_size).replace(".",""), users_test)
+np.save( "users_train_{}".format(train_test_size), users_train)
+np.save("users_test_{}".format(train_test_size), users_test)
 
 
 log.write( "\nusers vectors saved\n\n" )
