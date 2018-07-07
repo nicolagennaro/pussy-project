@@ -1,6 +1,11 @@
+import numpy as np
+import pandas as import pd
+
+
 config_predictions = {
     left_outs: [1,2,3,4,5],
-    top_from_predictions: [1,2,3,4,5,6,7,8,9,10]
+    top_from_predictions: [1,2,3,4,5,6,7,8,9,10],
+    measure: ["precision","recall","sps"]
 }
 
 # utility function to load parameters from file
@@ -82,11 +87,67 @@ def predict_user(user, in_model, train_gen, left_out=1, top_from=10):
 	return real_movies, predicted_movies
 
 
-def make_predictions(model, train_gen, users, left_out=1,top_from=5)
+def make_predictions(model, train_gen, users, left_out=1,top_from=5):
+    result = []
     for user in users:
         real, pred = predict_user(user, model, train_gen, left_out, top_from)
+        result.append({user:user, real:real, pred:pred})
+    
+    return result
 
 
 
-def evaluate_predictions(predictions)
+def evaluate_predictions(predictions, method):
+    mean = 0
+    m2 = 0
+    n= len(predictions)
+    if(method == "precision"):
+        for p in predictions:
+            s = np.sum(np.in1d(p.real, p.pred))/ p.pred.shape[0]
+            mean += s/n
+            m2 += (s**2)/(n-1)
+    else if(method == "recall"):
+        for p in predictions:
+            s = np.sum(np.in1d(p.real, p.pred))/ p.real.shape[0]
+            mean += s/n
+            m2 += (s**2)/(n-1)
+    else if(method == "sps"):
+        for p in predictions:
+            s = np.sum(np.in1d(p.real, p.pred))
+            mean += s/n
+            m2 += (s**2)/(n-1)
+
+    sd = np.sqrt(m2 + (n/(n-1))*mean**2)
+    return {score: mean, sd: sd}    
+
+
+def evaluate_model(model, users):
+    result = {left_out:[], top_from:[], method: [], score:[], sd:[]}
+
+    def appendToResult(left_out, top_from, evaluation, method):
+        result.left_out.append(left_out)
+        result.top_from.append(top_from)
+        result.method.append(method)
+        result.score.append(evaluation.score)
+        result.sd.append(evaluation.sd)
+
+    for left_out in config_predictions.left_out:
+        for top_from in config_predictions.top_from_predictions:
+            predictions = make_predictions(model, train_generator_softmax, users, left_out, top_from)
+            evaluation = evaluate_predictions(predictions, "precision")
+            appendToResult(left_out, top_from, evaluation, "precision")
+            evaluation = evaluate_predictions(predictions, "recall")
+            appendToResult(left_out, top_from, evaluation, "recall")
+            predictions = make_predictions(model, train_generator_sps, users, left_out, top_from)
+            evaluation = evaluate_predictions(predictions, "sps")
+            appendToResult(left_out, top_from, evaluation, "sps")
+        
+    return pd.DataFrame(result)
+
+
+
+
+
+    
+
     
