@@ -107,7 +107,7 @@ log.write( "n_users_train: {}\n\n".format(n_users) )
 
 
 
-steps_per_epoch = 2						# a sweep of the 'whole' training set
+steps_per_epoch = n_users						# a sweep of the 'whole' training set
 validation_steps = int(validation_steps_ratio*steps_per_epoch)		# this is used for validation during the training
 
 if validation_steps == 0:
