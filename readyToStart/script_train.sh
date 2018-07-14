@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=2          # 2 tasks per node
-#SBATCH --gres=gpu:kepler:1          # for the gpu
+#SBATCH --ntasks-per-node=16          # number of tasks per node
+#SBATCH --gres=gpu:kepler:2          # for the gpu
 
-#SBATCH --time=4:00:00               # time limits: 4 hour
+#SBATCH --time=8:00:00               # time limits
 
 #SBATCH --error=myJob.err            # standard error file
 #SBATCH --output=myJob.out           # standard output file
@@ -18,6 +18,7 @@ module load profile/deeplrn
 module load cuda
 module load cudnn
 
-python train_def.py configuration_alpha.txt
+cd scripts
+python train_def.py configuration_beta.txt
 
 deactivate

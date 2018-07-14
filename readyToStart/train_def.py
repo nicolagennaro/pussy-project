@@ -161,8 +161,9 @@ for i in range(epochs_groups):
 	model.fit_generator(pussy.train_generator_softmax(ratings, users_train, n_movies, left_out), epochs=predict_every, steps_per_epoch=steps_per_epoch,
 			validation_data=pussy.train_generator_softmax(ratings, users_train, n_movies, left_out), validation_steps=validation_steps,
 			callbacks=[csv_logger])
-	pussy.evaluate_model(model, users_train, ratings, n_movies).to_csv(path_or_buf="{}_{}_train.csv".format(file_parameters,(1+i)*predict_every), header=True, sep=",", index=False)
-	pussy.evaluate_model(model, users_test, ratings, n_movies).to_csv(path_or_buf="{}_{}_test.csv".format(file_parameters,(1+i)*predict_every), header=True, sep=",", index=False)
+	model.save("model_file_{}".format(i))
+	#pussy.evaluate_model(model, users_train, ratings, n_movies).to_csv(path_or_buf="{}_{}_train.csv".format(file_parameters,(1+i)*predict_every), header=True, sep=",", index=False)
+	#pussy.evaluate_model(model, users_test, ratings, n_movies).to_csv(path_or_buf="{}_{}_test.csv".format(file_parameters,(1+i)*predict_every), header=True, sep=",", index=False)
 	
 
 
