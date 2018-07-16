@@ -1,0 +1,180 @@
+\documentclass{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{multicol}
+% \usepackage{adjustbox}
+ 
+\graphicspath{{./pics/}}
+ 
+\usepackage[T1]{fontenc}
+
+\usepackage{amsmath}
+
+\usepackage{amsthm}
+\usepackage{amssymb}
+
+\usepackage{dsfont}
+
+\usepackage{verbatim}
+
+\usepackage{mathtools}
+% \usepackage{tikz}
+
+% Information to be included in the title page:
+\title{Movies recommender system}
+\author{The Pussycats: Alex Draghi, Laura Falciani, Nicola Gennaro}
+\date{2018}
+ 
+ 
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}
+\frametitle{Table of Contents}
+
+\tableofcontents
+\end{frame}
+
+
+
+
+
+
+%
+% measures
+%
+
+\begin{frame}
+
+\frametitle{Measures}
+
+\begin{enumerate}
+	\item Precision
+	\item Recall
+	\item Sps (Short-term Prediction Successes) 
+\end{enumerate}
+
+
+\end{frame}
+
+
+  \begin{frame}
+  \frametitle{The Movielens dataset}
+
+  The dataset contains 1,000,209 anonymous ratings of approximately 3,900 movies made by 6,040 MovieLens users since 2000 to 2003.
+    
+  \end{frame}
+
+
+%
+%
+%
+
+\begin{frame}
+
+\frametitle{Train-Test split}
+We divided the users in two groups: train set (0.8) and test set (0.2), having care that the number of ratings in the two sets was divided according to the same ratio. \\We used this partition throughout the whole analysis.
+
+\end{frame}
+
+
+%
+%
+%
+
+\begin{frame}
+
+\frametitle{Top-n predictions}
+
+We used two different approaches:
+
+
+\begin{enumerate}
+	\item Suggest most rated movies
+	\item Suggest highest Laplace smoothing score movies	
+ \end{enumerate}
+
+
+\end{frame}
+
+
+
+
+%
+%
+%
+
+\begin{frame}
+
+\frametitle{Top-n predictions}
+
+immagini
+
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%
+%
+%
+
+\begin{frame}
+
+\frametitle{KNN}
+We used the cosine similarity as distance measure between users.
+$$
+d_{i,u} = \frac{ \mathcal{R}_i \cdot \mathcal{R}_u} {\|{\mathcal{R}_i} \|        \| {\mathcal{R}_u}   \|}
+$$
+
+Then, using the $k$ closest users to user $i$ a score is computed between the user $i$ and an item $j$:\\ 
+$$
+s_{i,j} = \sum_{u \in \mathcal{N}_k(i)} d_{i,u} \mathds{1}( j \in \mathcal{R}_u)
+$$
+
+
+\end{frame}
+
+
+%
+%
+%
+
+\begin{frame}
+
+\frametitle{KNN}
+
+% choose k 
+
+\end{frame}
+
+
+
+%
+%
+%
+
+\begin{frame}
+
+\frametitle{KNN}
+
+% choose k 
+
+\end{frame}
+
+\end{document}
