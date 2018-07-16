@@ -16,44 +16,52 @@ import os
 import sys
 
 
+
+import pussy
+
+file_parameters = sys.argv[1]	# path of file with parameters
+
+
+params = pussy.load_config(file_parameters)
+
+
+
+train_test_size = params["train_test_size"]
+
+
 #
 # some variables
 #
 
 
-ratings_file = "../mr_newmovie_names.csv"
+ratings_file = "mr_newmovie_names.csv"
+users_train_file = "users_train_{}.npy".format(train_test_size)
+users_test_file = "users_test_{}.npy".format(train_test_size)
 
 
-n_epochs = 1
-left_out = 1				# number of ratings of one user left out during training
-steps_per_epoch = 10			# a sweep of the 'whole' training set
-validation_steps_ratio = 0.05		# this is used for validation during the training
-learning_rate = 0.1
-epsilon = 0.01
+left_out = int(params["left_out"])		# number of ratings of one user left out during training
+hidden_neurons = int(params["hidden_neurons"])
+n_epochs = int(params["n_epochs"])
+predict_every = int(params["predict_every"])
 
-csv_log = True
-save_model = True
+epochs_groups = int(np.ceil(n_epochs/predict_every))
 
 
-users_file = "users_train.npy"
-train_file = "training_file"
+validation_steps_ratio = float(params["validation_steps_ratio"])	# the validation size is n_users_train * this variable
+learning_rate = float(params["learning_rate"])
+epsilon = float(params["epsilon"])			# parameter for adagrad
+
+
+model_file = "model_file_20"
+train_file_log = "training_loss_values"
 log_file = "log_train"
+# validation_file = "validation_file"
 
+# model_file = model_file + "_" + file_parameters
 
-model_file = sys.argv[1]
+new_model_file = "model_file_restored"
 
-
-
-now = datetime.datetime.now().isoformat()
-now = now[ : now.find('.')]
-
-# tim = now.split(":")
-# tim = v[0][-2:] + "_" + v[1] + "_" + v[2]
-
-
-new_model_file = "model_file_" + now
-
-log = open(log_file + "_" + now, "w")
+log = open(log_file, "w")
 
 log.write("\nTrain_restart:\n\n")
 log.write("old_model_file:  {}".format(model_file))
@@ -95,7 +103,7 @@ log.write( "n_movies: {}\n".format(n_movies) )
 # read users vector
 #
 
-users_train = np.load(users_file)
+users_train = np.load(users_train_file)
 n_users = users_train.shape[0]
 log.write( "n_users: {}\n\n".format(n_users) )
 
@@ -109,42 +117,6 @@ if validation_steps == 0:
 
 log.write( "steps_per_epoch {}\n".format(steps_per_epoch) )
 log.write( "validation steps {}\n".format(validation_steps) )
-
-
-
-#
-# train generator, extract user from train, put data in np array
-# this function feeds the NN with a sequence of observations of one user
-#
-
-
-def train_generator(users_pool, out=1):
-	
-	while(True):
-		
-		global n_movies
-		
-		user = np.random.choice(users_pool)
-		d = ratings[ ratings['userID']==user]
-		d.sort_values(['time'])
-		user_movies_x = d.iloc[ : (d.shape[0] - out), 1 ]
-		user_movies_y = d.iloc[ d.shape[0] - out : , 1 ]
-
-		
-		X_train = np.zeros((1, d.shape[0] - out, n_movies))
-		y_train = np.zeros((1, n_movies))
-		
-		for _ in range((d.shape[0] - out)):
-			X_train[ 0, _, user_movies_x.iloc[_] ] = 1
-		
-		for _ in range(out):
-			y_train[ 0, user_movies_y.iloc[_] ] = 1/out
-
-		
-		yield np.array(X_train), np.array(y_train)
-
-
-
 
 
 #
@@ -170,16 +142,17 @@ start_time = datetime.datetime.now()
 log.write( "start training at {}\n".format(start_time) )
 
 
-if csv_log:
-    csv_logger = CSVLogger(train_file, append=True, separator=',')
-    restored_model.fit_generator(train_generator(users_train, left_out), epochs=n_epochs, steps_per_epoch=steps_per_epoch,
-              validation_data=train_generator(users_train), validation_steps=validation_steps,
-              callbacks=[csv_logger])
-
+csv_logger = CSVLogger(train_file_log, append=True, separator=',')
     
-else:
-    restored_model.fit_generator(train_generator(users_train), epochs=n_epochs, steps_per_epoch=steps_per_epoch,
-              validation_data=train_generator(users_train), validation_steps=validation_steps)
+ 
+ 
+for e in range(n_epochs):
+        
+        restored_model.fit_generator(pussy.train_generator_softmax(ratings, users_train, n_movies, left_out), epochs=1, steps_per_epoch=steps_per_epoch, validation_data=pussy.train_generator_softmax(ratings, users_train, n_movies, left_out), validation_steps=validation_steps, callbacks=[csv_logger])
+
+        if e % 2 == 0:
+                restored_model.save("model_file_{}".format(e))   
+
 
 
 final_time = datetime.datetime.now()
