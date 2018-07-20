@@ -6,3 +6,4 @@ predict_every 2
 validation_steps_ratio 0.01
 learning_rate 0.1
 epsilon 0.01
+restore_epoch 12
