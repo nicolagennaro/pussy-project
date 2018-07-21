@@ -1,0 +1,11 @@
+train_test_size 0.2
+left_out 3
+kept 1
+hidden_neurons 20
+n_epochs 100
+predict_every 2
+steps_per_epoch 100
+validation_steps_ratio 0.01
+learning_rate 0.1
+epsilon 0.01
+restore_epoch 12
