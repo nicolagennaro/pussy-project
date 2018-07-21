@@ -130,7 +130,6 @@ log.write( "hidden_neurons: {}\n".format(hidden_neurons) )
 log.write( "in_out_neurons {}\n".format(in_out_neurons) )
 
 
-load_model_file=""
 model = keras.models.load_model(load_model_file)
 
 
