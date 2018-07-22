@@ -278,3 +278,26 @@ def append_to_dict(d, stat, left_out, top_from, model):
     d["sd"].append(ss[2])
     
     return d   
+
+
+
+def aggregate_predictions(users, vec, model, left_out, top_from, n_movies):
+        
+    result = []
+    
+        
+    for u in range(users.shape[0]):
+        
+        seq = vec[users[u]]
+        real = seq[ -left_out : ]
+        x, y = next( train_generator(vec, np.array(users[u]), n_movies, left_out, 1 ) )
+        
+        prediction = model.predict(x)
+        predicted = prediction[0].argsort()[ -top_from : ]
+        result.append(predicted)
+
+            
+    return result
+    
+
+
