@@ -87,7 +87,7 @@ models_name = model_file.readlines()
 seqs = pussy.make_vectors(users_train, ratings)
 
 
-d = {"model_name": [], "left_out" : [], "top_from" : [], "movieID" : [], "count" : [], "coverage":[] }
+d = {"model_name": [], "left_out" : [], "top_from" : [], "movieID" : [], "count" : [],"coverage":[] }
 
 
 left_out = [1]
@@ -97,27 +97,68 @@ tops = [10]
 
 
 for model in models_name:
-    model = model.replace("\n", "")
-    restored_model = keras.models.load_model(model)
-    for lo in left_out:
-        for top in tops:
-            predictions = pussy.aggregate_predictions(users_train, seqs, restored_model, lo, top, n_movies)
-            unique, counts = np.unique(predictions, return_counts=True)
-            d["model_name"].append(model)
-            d["left_out"].append(lo)
-            d["top_from"].append(top)
-            d["movieID"].append(unique)
-            d["count"].append(counts)
-            d["coverage"].append(unique.shape[0]/n_movies)
-
-
-    df = pd.DataFrame(d)
-    df.to_csv(path_or_buf = "coverage_{}.csv".format(file_models), sep=',', index=False)
+	model = model.replace("\n", "")
+	restored_model = keras.models.load_model(model)
+	for lo in left_out:
+		for top in tops:
+			predictions = pussy.aggregate_predictions(users_train, seqs, restored_model, lo, top, n_movies)
+			unique, counts = np.unique(predictions, return_counts=True)
+			d["model_name"].append(model)
+			d["left_out"].append(lo)
+			d["top_from"].append(top)
+			d["movieID"].append(unique)
+			d["count"].append(counts)
+			d["coverage"].append(unique.shape[0]/n_movies)
+	
+	df = pd.DataFrame(d)
+	df.to_csv(path_or_buf = "coverage_{}.csv".format(file_models), sep=',', index=False)
 			
 
 
 
 
+
+
+
+
+sys.exit(1)
+
+
+
+#
+# test
+#
+
+
+
+
+
+seqs = pussy.make_vectors(users_test, ratings)
+
+
+d = {"model_name": [], "left_out" : [], "top_from" : [], "measure" : [], "mean" : [], "sd" : [] }
+
+left_out = [1]
+tops = [5]
+
+# print(left_out)
+
+
+for model in models_name:
+
+
+	model = model.replace("\n", "")
+	restored_model = keras.models.load_model(model)
+
+	for lo in left_out:
+        	for top in tops:
+
+                	dd = pussy.predict_users_all(users_test, seqs, restored_model, lo, top, n_movies)
+                	d = pussy.append_to_dict(d, dd, lo, top, model)
+
+	df = pd.DataFrame(d)
+
+	df.to_csv(path_or_buf = "predict_test_{}.csv".format(file_models), sep=',', index=False)
 
 
 
