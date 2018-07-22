@@ -102,7 +102,7 @@ for model in models_name:
     for lo in left_out:
         for top in tops:
             predictions = pussy.aggregate_predictions(users_train, seqs, restored_model, lo, top, n_movies)
-            unique, counts = np.unique(x, return_counts=True)
+            unique, counts = np.unique(predictions, return_counts=True)
             d["model_name"].append(model)
             d["left_out"].append(lo)
             d["top_from"].append(top)
