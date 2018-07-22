@@ -21,6 +21,8 @@ import pussy
 
 file_parameters = sys.argv[1]	# path of file with parameters
 
+model_file = sys.argv[2]
+
 
 params = pussy.load_config(file_parameters)
 
@@ -40,6 +42,7 @@ users_test_file = "users_test_{}.npy".format(train_test_size)
 
 
 left_out = int(params["left_out"])		# number of ratings of one user left out during training
+kept = int(params["kept"])
 hidden_neurons = int(params["hidden_neurons"])
 n_epochs = int(params["n_epochs"])
 predict_every = int(params["predict_every"])
@@ -52,7 +55,7 @@ learning_rate = float(params["learning_rate"])
 epsilon = float(params["epsilon"])			# parameter for adagrad
 
 
-model_file = "model_file_20"
+
 train_file_log = "training_loss_values"
 log_file = "log_train"
 # validation_file = "validation_file"
@@ -108,7 +111,7 @@ n_users = users_train.shape[0]
 log.write( "n_users: {}\n\n".format(n_users) )
 
 
-steps_per_epoch = n_users						# a sweep of the 'whole' training set
+steps_per_epoch = 100						# a sweep of the 'whole' training set
 validation_steps = int(validation_steps_ratio*steps_per_epoch)		# this is used for validation during the training
 
 if validation_steps == 0:
@@ -144,14 +147,13 @@ log.write( "start training at {}\n".format(start_time) )
 
 csv_logger = CSVLogger(train_file_log, append=True, separator=',')
     
+seqs = pussy.make_vectors(users_train, ratings)
  
- 
-for e in range(n_epochs):
-        
-        restored_model.fit_generator(pussy.train_generator_softmax(ratings, users_train, n_movies, left_out), epochs=1, steps_per_epoch=steps_per_epoch, validation_data=pussy.train_generator_softmax(ratings, users_train, n_movies, left_out), validation_steps=validation_steps, callbacks=[csv_logger])
-
-        if e % 2 == 0:
-                restored_model.save("model_file_{}".format(e))   
+for i in range(epochs_groups):
+	restored_model.fit_generator(pussy.train_generator(seqs, users_train, n_movies, left_out, kept), epochs=predict_every, steps_per_epoch=steps_per_epoch,
+			validation_data=pussy.train_generator(seqs, users_train, n_movies, left_out, kept), validation_steps=validation_steps,
+			callbacks=[csv_logger])
+	restored_model.save("model_restored_file_{}".format(i) + file_parameters)
 
 
 
